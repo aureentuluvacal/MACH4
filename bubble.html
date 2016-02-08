@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>PCRD</title>
+	<meta charset="utf-8"/>
+	<link type="text/css" rel="stylesheet" href="css/master.css">
+	<script type="text/javascript" src="js/jquery-2.1.4.js"></script> 
+	<script type="text/javascript" src="js/d3.js"></script>
+	<script type="text/javascript">
+	$( document ).ready(function() {	
+		var data; 
+		
+	 	d3.csv('population.csv', function(error, dataset) { //reads in csv file	
+			data = dataset; //data from file is now assigned to global variable
+			data.forEach(function(d) {                    
+				d.pop2000 = +d.pop2000; //casts values to int, they come in as strings
+				d.pop2005 = +d.pop2005;      
+	   		});     
+	   		
+	    initChart(); //call to function, must be here because data has to be read in   
+	});
+	
+	 function initChart() {
+	    var vis = d3.select("#bubble"); //selects where we want visualization to go
+ 		var xRange = d3.scale.linear() //sets the range on the x axis
+                	.range([40, 600]) //this is the location of the axis within bubble
+               		.domain([d3.min(data, function(d) { //gets min value from specified column
+                 		 return (d.pop2000);
+               		 }), d3.max(data, function(d) { //gets max value from specified column
+                 		 return d.pop2000;
+               		 })]);
+  		var yRange = d3.scale.linear() //same shit
+                	.range([600, 40])
+               		 .domain([d3.min(data, function(d) {
+                	  return d.pop2005;
+               		 }), d3.max(data, function(d) {
+                	  return d.pop2005;
+               		 })]);
+ 		var xAxis = d3.svg.axis().scale(xRange); //draws the axis on the page
+  		var yAxis = d3.svg.axis().scale(yRange).orient("left");//same
+  		vis.append("svg:g").call(xAxis).attr("transform", "translate(0,600)"); //must manually move axis so it's in the right location
+  		vis.append("svg:g").call(yAxis).attr("transform", "translate(60,0)");
+  		
+  		var circles = vis.selectAll("circle").data(data); //maps data to circles that will be made
+
+		circles
+    		.enter() //creates the circles
+   			 .insert("circle") 
+    		.attr("cx", function(d) { return xRange (d.pop2000); }) //center of circle drawn in where data falls on graph
+    		.attr("cy", function(d) { return yRange (d.pop2005); })
+   			 .attr("r", 10) //radius of circle
+   			 .style("fill", "red"); //obviously how the circle looks
+	   }
+	});
+	</script>
+</head>
+<body>
+	<svg id="bubble" width="700" height="700"></svg>
+</body>
+</html>
