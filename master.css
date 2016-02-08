@@ -1,0 +1,36 @@
+/*************************************************/
+/*												                       */
+/*			       PCRD Data Viz Styles			      	 */
+/*												                       */
+/*************************************************/
+
+/*
+	Main Colors: 
+
+*/
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+#bubble {
+	margin: 0 0 0 40px;
+	
+}
+
+path {
+	transform-origin: center center 0px;
+	stroke: gray;
+}
+
+svg {
+	overflow: visible;
+	margin:0 auto;
+}
+
+#pickData {
+	position: fixed; 
+	top: 200px;
+	left: 40px;
+}
